@@ -16,7 +16,7 @@ class RolRead(RolCreate):
 class UsuarioCreate(BaseModel):
     nombre_usuario: str
     correo: EmailStr
-    contraseña: str
+    contrasena: str
     rol_id: int
 
 
@@ -27,7 +27,7 @@ class UsuarioRead(UsuarioCreate):
 class UsuarioUpdate(BaseModel):
     nombre_usuario: Optional[str] = None
     correo: Optional[EmailStr] = None
-    contraseña: Optional[str] = None
+    contrasena: Optional[str] = None
     rol_id: Optional[int] = None
 
 
@@ -78,4 +78,5 @@ class ReservaUpdate(BaseModel):
     servicio_id: Optional[int] = None
     estado_id: Optional[int] = None
     fecha_reserva: Optional[datetime] = None
+
 
