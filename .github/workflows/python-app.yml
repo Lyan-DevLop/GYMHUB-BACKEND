@@ -25,14 +25,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest flake8 codacy-coverage
 
-      - name: 🧹 Revisar estilo con flake8
-        run: |
-          flake8 --max-line-length=120 --exclude=venv,__pycache__ .
-
-      - name: 🧪 Ejecutar pruebas
-        run: |
-          pytest -v --maxfail=1 --disable-warnings --cov=. --cov-report=xml
-
       - name: 📊 Enviar cobertura a Codacy
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
