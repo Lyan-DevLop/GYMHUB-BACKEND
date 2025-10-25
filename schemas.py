@@ -1,14 +1,16 @@
-# schemas.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
+
 
 # ---------- ROLES ----------
 class RolCreate(BaseModel):
     nombre: str
 
+
 class RolRead(RolCreate):
     rol_id: int
+
 
 # ---------- USUARIOS ----------
 class UsuarioCreate(BaseModel):
@@ -17,14 +19,17 @@ class UsuarioCreate(BaseModel):
     contraseña: str
     rol_id: int
 
+
 class UsuarioRead(UsuarioCreate):
     usuario_id: int
+
 
 class UsuarioUpdate(BaseModel):
     nombre_usuario: Optional[str] = None
     correo: Optional[EmailStr] = None
     contraseña: Optional[str] = None
     rol_id: Optional[int] = None
+
 
 # ---------- SERVICIOS ----------
 class ServicioCreate(BaseModel):
@@ -34,8 +39,10 @@ class ServicioCreate(BaseModel):
     cupos: int
     descripcion: str
 
+
 class ServicioRead(ServicioCreate):
     servicio_id: int
+
 
 class ServicioUpdate(BaseModel):
     nombre_servicio: Optional[str] = None
@@ -44,12 +51,15 @@ class ServicioUpdate(BaseModel):
     cupos: Optional[int] = None
     descripcion: Optional[str] = None
 
+
 # ---------- ESTADO ----------
 class EstadoCreate(BaseModel):
     nombre: str
 
+
 class EstadoRead(EstadoCreate):
     estado_id: int
+
 
 # ---------- RESERVAS ----------
 class ReservaCreate(BaseModel):
@@ -58,8 +68,10 @@ class ReservaCreate(BaseModel):
     estado_id: int
     fecha_reserva: datetime
 
+
 class ReservaRead(ReservaCreate):
     reserva_id: int
+
 
 class ReservaUpdate(BaseModel):
     usuario_id: Optional[int] = None
