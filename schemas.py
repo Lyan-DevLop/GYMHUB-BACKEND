@@ -78,3 +78,4 @@ class ReservaUpdate(BaseModel):
     servicio_id: Optional[int] = None
     estado_id: Optional[int] = None
     fecha_reserva: Optional[datetime] = None
+
