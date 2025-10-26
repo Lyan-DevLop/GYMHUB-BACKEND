@@ -29,10 +29,12 @@ DATABASE_URL = (
 # Crear el engine de SQLModel
 engine = create_engine(DATABASE_URL, echo=True)
 
+
 # Crear sesión
 def get_session():
     with Session(engine) as session:
         yield session
+
 
 # 🚀 Prueba directa de conexión
 if __name__ == "__main__":
@@ -55,4 +57,3 @@ if __name__ == "__main__":
         print("🔒 Conexión cerrada correctamente.")
     except Exception as e:
         print(f"❌ Error al conectar: {e}")
-
