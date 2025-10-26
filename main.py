@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlmodel import select, Session
 from typing import List
-import psycopg2
+#import psycopg2
 
 from database import get_session, engine
 import models
