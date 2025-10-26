@@ -80,7 +80,7 @@ def create_usuario(payload: schemas.UsuarioCreate, session: Session = Depends(ge
     usuario = models.Usuario(
         nombre_usuario=payload.nombre_usuario,
         correo=payload.correo,
-        contraseña=payload.contraseña,
+        contrasena=payload.contrasena,
         rol_id=payload.rol_id,
     )
     session.add(usuario)

@@ -20,7 +20,7 @@ class Usuario(SQLModel, table=True):
     usuario_id: Optional[int] = Field(default=None, primary_key=True)
     nombre_usuario: str
     correo: str
-    contraseña: str  # noqa: W9010  # (flake8 ignora acento en variable)
+    contrasena: str  # noqa: W9010  # (flake8 ignora acento en variable)
     rol_id: int = Field(foreign_key="roles.rol_id")
 
 
