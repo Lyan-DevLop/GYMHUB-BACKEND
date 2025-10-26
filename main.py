@@ -9,11 +9,6 @@ import schemas
 
 app = FastAPI(title="GYMHUB API - FastAPI + Supabase")
 
-# Si quieres crear tablas automáticamente (solo si NO existen en Supabase),
-# descomenta la línea siguiente. Ten cuidado: si tu Supabase ya tiene la estructura, NO la uses.
-# from sqlmodel import SQLModel
-# SQLModel.metadata.create_all(engine)
-
 
 # ---------- ROLES ----------
 @app.get("/roles", response_model=List[schemas.RolRead])

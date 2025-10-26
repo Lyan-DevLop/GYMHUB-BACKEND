@@ -1,5 +1,3 @@
-"""Modelos de la base de datos para GymHub."""
-
 from datetime import datetime
 from typing import Optional
 from sqlmodel import Field, SQLModel
@@ -20,7 +18,7 @@ class Usuario(SQLModel, table=True):
     usuario_id: Optional[int] = Field(default=None, primary_key=True)
     nombre_usuario: str
     correo: str
-    contrasena: str  # noqa: W9010  # (flake8 ignora acento en variable)
+    contrasena: str
     rol_id: int = Field(foreign_key="roles.rol_id")
 
 
@@ -31,7 +29,7 @@ class Servicio(SQLModel, table=True):
     servicio_id: Optional[int] = Field(default=None, primary_key=True)
     nombre_servicio: str
     usuario_id: int = Field(foreign_key="usuarios.usuario_id")
-    duracion: str  # Puedes cambiar por Interval si lo prefieres
+    duracion: str 
     cupos: int
     descripcion: str
 
