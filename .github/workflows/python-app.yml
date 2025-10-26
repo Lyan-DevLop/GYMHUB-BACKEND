@@ -23,10 +23,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest flake8 codacy-coverage
+          pip install pytest flake8 coverage codacy-coverage
+
+      - name: 🧹 Analizar estilo con flake8
+        run: |
+          flake8 . --max-line-length=120
+
+      - name: 🧪 Ejecutar pruebas con cobertura
+        run: |
+          coverage run -m pytest
+          coverage xml  # genera el coverage.xml que necesita Codacy
 
       - name: 📊 Enviar cobertura a Codacy
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
           python-codacy-coverage -r coverage.xml
+
