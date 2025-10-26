@@ -53,4 +53,3 @@ class Reserva(SQLModel, table=True):
     servicio_id: int = Field(foreign_key="servicios.servicio_id")
     estado_id: int = Field(foreign_key="estado.estado_id")
     fecha_reserva: datetime
-    

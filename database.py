@@ -1,7 +1,7 @@
 import os
 from sqlmodel import create_engine, Session
 from dotenv import load_dotenv
-from database import engine
+
 
 # Cargar dotenv (aunque no exista, no da error)
 load_dotenv()
@@ -58,4 +58,3 @@ if __name__ == "__main__":
         print("🔒 Conexión cerrada correctamente.")
     except Exception as e:
         print(f"❌ Error al conectar: {e}")
-        
