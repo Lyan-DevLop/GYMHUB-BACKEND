@@ -27,7 +27,7 @@ jobs:
 
       - name: 🧹 Analizar estilo con flake8
         run: |
-          flake8 . --max-line-length=120
+           flake8 --max-line-length=120 --exclude=venv,_pycache_ .
 
       - name: 🧪 Ejecutar pruebas con cobertura
         run: |
