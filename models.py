@@ -29,7 +29,7 @@ class Servicio(SQLModel, table=True):
     servicio_id: Optional[int] = Field(default=None, primary_key=True)
     nombre_servicio: str
     usuario_id: int = Field(foreign_key="usuarios.usuario_id")
-    duracion: str 
+    duracion: str
     cupos: int
     descripcion: str
 
