@@ -1,19 +1,17 @@
 import os
 from sqlmodel import create_engine, Session
 from dotenv import load_dotenv
+import psycopg2
 
-
-# Cargar dotenv (aunque no exista, no da error)
+# Cargar variables del archivo .env si existe
 load_dotenv()
 
-
-# Variables quemadas (sin usar .env)
-os.environ["user"] = "postgres"
+# Variables
+os.environ["user"] = "postgres.izybqmlrauuahpcjfvfb"
 os.environ["password"] = "HubFastApi123456789"
-os.environ["host"] = "db.izybqmlrauuahpcjfvfb.supabase.co"
-os.environ["port"] = "5432"
+os.environ["host"] = "aws-1-us-east-1.pooler.supabase.com"
+os.environ["port"] = "6543"
 os.environ["dbname"] = "postgres"
-
 
 # Leer variables de entorno
 USER = os.getenv("user")
@@ -22,12 +20,13 @@ HOST = os.getenv("host")
 PORT = os.getenv("port")
 DBNAME = os.getenv("dbname")
 
+# URL de conexión completa (pooler + IPv4 + SSL)
+DATABASE_URL = (
+    f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}"
+    f"?sslmode=require&options=-4"
+)
 
-# Crear la URL de conexión (PostgreSQL en Supabase)
-DATABASE_URL = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}"
-
-
-# Crear el engine
+# Crear el engine de SQLModel
 engine = create_engine(DATABASE_URL, echo=True)
 
 
@@ -37,24 +36,24 @@ def get_session():
         yield session
 
 
-# Prueba de conexión directa
+# Prueba directa de conexión
 if __name__ == "__main__":
-    import psycopg2
-
     try:
         conn = psycopg2.connect(
             user=USER,
             password=PASSWORD,
             host=HOST,
             port=PORT,
-            dbname=DBNAME
+            dbname=DBNAME,
+            sslmode="require",
+            options="-4"  # Forzar IPv4
         )
-        print("✅ Conexión exitosa a la base de datos Supabase")
+        print("Conexión exitosa al pooler Supabase (IPv4, SSL habilitado)")
         cur = conn.cursor()
         cur.execute("SELECT NOW();")
-        print("🕒 Hora actual en la BD:", cur.fetchone()[0])
+        print("Hora actual en la base de datos:", cur.fetchone()[0])
         cur.close()
         conn.close()
-        print("🔒 Conexión cerrada correctamente.")
+        print("Conexión cerrada correctamente.")
     except Exception as e:
-        print(f"❌ Error al conectar: {e}")
+        print(f"Error al conectar: {e}")
