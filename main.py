@@ -8,7 +8,6 @@ import schemas
 import re
 from datetime import timedelta
 
-from fastapi import FastAPI, Request, Response
 from starlette.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,7 +17,7 @@ app = FastAPI(title="GYMHUB API - FastAPI + Supabase")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins= ["*"],       # permite estos orígenes
+    allow_origins=["*"],       # permite estos orígenes
     allow_credentials=False,
     allow_methods=["*"],         # GET, POST, PUT, DELETE
     allow_headers=["*"],         # headers personalizados
@@ -29,6 +28,7 @@ app.add_middleware(
 @app.options("/{rest_of_path:path}")
 async def options_handler(rest_of_path: str):
     return JSONResponse(status_code=200)
+
 
 # ---------- ROLES ----------
 @app.get("/roles", response_model=List[schemas.RolRead])
