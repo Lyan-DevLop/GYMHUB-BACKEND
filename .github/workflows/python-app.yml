@@ -27,6 +27,7 @@ jobs:
 
       - name: Analizar estilo con flake8
         run: |
+          exclude = venv, __pycache__, .git, .github
           flake8 --max-line-length=120 --exclude=venv,_pycache_ .
 
       - name: Ejecutar pruebas con cobertura
