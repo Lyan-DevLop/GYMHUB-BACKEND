@@ -62,8 +62,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gh-back:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/GYM:latest
 
       - name: Verificar imagen subida
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gh-back:latest
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/GYM:latest
 
