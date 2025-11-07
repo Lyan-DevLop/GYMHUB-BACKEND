@@ -1,0 +1,12 @@
+# Ignorar el entorno virtual
+venv/**
+__pycache__/**
+.git/**
+
+# Ignorar cachés de Python
+
+
+# Ignorar configuración de git
+
+
+# (Opcional) Ignorar pruebas si no quieres que las analice
