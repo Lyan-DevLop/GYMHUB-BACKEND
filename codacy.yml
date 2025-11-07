@@ -1,0 +1,13 @@
+engines:
+  pylint:
+    enabled: true
+  bandit:
+    enabled: true
+  flake8:
+    enabled: true
+
+exclude_paths:
+  - venv/**
+  - __pycache__/**
+  - .git/**
+  - .github/**
