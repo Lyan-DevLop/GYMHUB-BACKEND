@@ -24,7 +24,7 @@ COPY . .
 
 # Variables de entorno de conexión a Supabase (IPv4 pooler)
 ENV SUPABASE_USER="postgres.izybqmlrauuahpcjfvfb" \
-    SUPABASE_PASSWORD="HubFastApi123456789" \
+    SUPABASE_PASSWORD=${SUPABASE_PASSWORD} \
     SUPABASE_HOST="aws-1-us-east-1.pooler.supabase.com" \
     SUPABASE_PORT="6543" \
     SUPABASE_DB="postgres" \

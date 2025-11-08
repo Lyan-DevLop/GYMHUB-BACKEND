@@ -5,9 +5,29 @@ from typing import List
 from database import get_session
 import models
 import schemas
+import re
+from datetime import timedelta
+
+from starlette.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(title="GYMHUB API - FastAPI + Supabase")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],       # permite estos orígenes
+    allow_credentials=False,
+    allow_methods=["*"],         # GET, POST, PUT, DELETE
+    allow_headers=["*"],         # headers personalizados
+)
+
+
+# Responder a peticiones OPTIONS
+@app.options("/{rest_of_path:path}")
+async def options_handler(rest_of_path: str):
+    return JSONResponse(status_code=200)
 
 
 # ---------- ROLES ----------
@@ -109,9 +129,36 @@ def delete_usuario(usuario_id: int, session: Session = Depends(get_session)):
 
 
 # ---------- SERVICIOS ----------
-@app.get("/servicios", response_model=List[schemas.ServicioRead])
+def parse_duracion(texto: str) -> timedelta:
+    horas = minutos = 0
+    if match := re.search(r"(\d+)\s*h", texto):
+        horas = int(match.group(1))
+    if match := re.search(r"(\d+)\s*m", texto):
+        minutos = int(match.group(1))
+    return timedelta(hours=horas, minutes=minutos)
+
+
+# 🔹 Función para convertir timedelta a texto (al devolver)
+def format_duracion(valor) -> str:
+    if isinstance(valor, timedelta):
+        total_seconds = int(valor.total_seconds())
+        horas, resto = divmod(total_seconds, 3600)
+        minutos, _ = divmod(resto, 60)
+        return f"{horas}h {minutos}m"
+    return str(valor)
+
+
+# -----------------------------
+# 🟩 ENDPOINTS CRUD COMPLETOS
+# -----------------------------
+
+@app.get("/servicios", response_model=list[schemas.ServicioRead])
 def get_servicios(session: Session = Depends(get_session)):
-    return session.exec(select(models.Servicio)).all()
+    servicios = session.exec(select(models.Servicio)).all()
+    # Convertir timedelta → string
+    for s in servicios:
+        s.duracion = format_duracion(s.duracion)
+    return servicios
 
 
 @app.get("/servicios/{servicio_id}", response_model=schemas.ServicioRead)
@@ -119,15 +166,25 @@ def get_servicio(servicio_id: int, session: Session = Depends(get_session)):
     servicio = session.get(models.Servicio, servicio_id)
     if not servicio:
         raise HTTPException(status_code=404, detail="Servicio no encontrado")
+    servicio.duracion = format_duracion(servicio.duracion)
     return servicio
 
 
 @app.post("/servicios", response_model=schemas.ServicioRead, status_code=status.HTTP_201_CREATED)
 def create_servicio(payload: schemas.ServicioCreate, session: Session = Depends(get_session)):
-    servicio = models.Servicio(**payload.dict())
+    data = payload.dict()
+    print("DEBUG PAYLOAD:", payload.dict())
+    # Convertir texto a timedelta antes de guardar
+    if "duracion" in data and isinstance(data["duracion"], str):
+        data["duracion"] = parse_duracion(data["duracion"])
+
+    servicio = models.Servicio(**data)
     session.add(servicio)
     session.commit()
     session.refresh(servicio)
+
+    # Convertir a texto antes de devolver
+    servicio.duracion = format_duracion(servicio.duracion)
     return servicio
 
 
@@ -136,12 +193,21 @@ def update_servicio(servicio_id: int, payload: schemas.ServicioUpdate, session: 
     servicio = session.get(models.Servicio, servicio_id)
     if not servicio:
         raise HTTPException(status_code=404, detail="Servicio no encontrado")
+
     obj_data = payload.dict(exclude_unset=True)
+
+    # Si viene duracion en texto, convertirla a timedelta
+    if "duracion" in obj_data and isinstance(obj_data["duracion"], str):
+        obj_data["duracion"] = parse_duracion(obj_data["duracion"])
+
     for key, value in obj_data.items():
         setattr(servicio, key, value)
+
     session.add(servicio)
     session.commit()
     session.refresh(servicio)
+
+    servicio.duracion = format_duracion(servicio.duracion)
     return servicio
 
 
@@ -245,3 +311,11 @@ def delete_reserva(reserva_id: int, session: Session = Depends(get_session)):
     session.delete(reserva)
     session.commit()
     return None
+
+
+@app.get("/reservas/usuario/{usuario_id}", response_model=List[schemas.ReservaRead])
+def get_reservas_por_usuario(usuario_id: int, session: Session = Depends(get_session)):
+    reservas = session.query(models.Reserva).filter(models.Reserva.usuario_id == usuario_id).all()
+    if not reservas:
+        raise HTTPException(status_code=404, detail="No se encontraron reservas para este usuario")
+    return reservas
