@@ -1,3 +1,20 @@
+# Ignorar entorno virtual y dependencias
 venv/**
+env/**
+.venv/**
+site-packages/**
+
+# Ignorar cachés de Python
 __pycache__/**
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar control de versiones
 .git/**
+.github/**
+
+# Ignorar archivos temporales o de configuración
+*.log
+*.tmp
+
